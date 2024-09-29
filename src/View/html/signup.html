@@ -1,0 +1,16 @@
+<main class="ajax-container">
+    <div class="ajax-content">
+        <h2 class="ajax-title">Create an account</h2>
+        <form class="ajax-form" hx-post="/signup" hx-ext="response-targets" hx-target-error="#error-container">
+            <label for="input-email">Email</label>
+            <input id="input-email" name="email" type="email" minlength="6" maxlength="255" required>
+            <label for="input-password">Password</label>
+            <input id="input-password" name="password" type="password" minlength="6" maxlength="255" required>
+            <label for="input-password-repeat">Repeat password</label>
+            <input id="input-password-repeat" name="password-repeat" type="password" minlength="6" maxlength="255" required>
+            <button type="submit">Sign Up</button>
+            <div id="error-container"></div>
+        </form>
+        <a class="ajax-nav" hx-get="/templateLogin" hx-target="body">Back to login</a>
+    </div>
+</main>

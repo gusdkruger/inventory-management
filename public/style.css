@@ -1,0 +1,85 @@
+:root {
+    --background-white: #FFFFFF;
+    --background-lightblue: #F0F4F9;
+    --text-primary: #000000;
+    --text-blue: #0B57D0;
+    --text-red: #B3261E;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    color: var(--text-primary);
+}
+
+.ajax-container {
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--background-white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ajax-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 300px;
+}
+
+.ajax-title {
+    font-size: 25px;
+}
+
+.ajax-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.ajax-form label {
+    margin: 0 0 5px 5px;
+}
+
+.ajax-form input {
+    margin-bottom: 15px;
+    background-color: transparent;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    padding: 4px;
+}
+
+.ajax-form button {
+    border: none;
+    cursor: pointer;
+    background-color: var(--text-blue);
+    color: var(--background-white);
+    padding: 6px 4px;
+    border-radius: 5px;
+}
+
+#error-container {
+    text-align: center;
+    color: var(--text-red);
+    margin: 10px 0 0;
+}
+
+.ajax-nav {
+    cursor: pointer;
+    padding: 5px 10px;
+    margin: 0 auto;
+    color: var(--text-blue);
+}
+
+@media (width > 425px) {
+    .ajax-container {
+        background-color: var(--background-lightblue);
+    }
+
+    .ajax-content {
+        border-radius: 10px;
+        background-color: var(--background-white);
+        padding: 20px;
+    }
+}

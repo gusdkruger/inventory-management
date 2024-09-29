@@ -1,0 +1,14 @@
+<main class="ajax-container">
+    <div class="ajax-content">
+        <h2 class="ajax-title">Login</h2>
+        <form class="ajax-form" hx-post="/login" hx-ext="response-targets" hx-target-error="#error-container">
+            <label for="input-email">Email</label>
+            <input id="input-email" name="email" type="email" minlength="6" maxlength="255" required>
+            <label for="input-password">Password</label>
+            <input id="input-password" name="password" type="password" minlength="6" maxlength="255" required>
+            <button type="submit">Login</button>
+            <div id="error-container"></div>
+        </form>
+        <a class="ajax-nav" hx-get="/templateSignup" hx-target="body">Create an account</a>
+    </div>
+</main>
