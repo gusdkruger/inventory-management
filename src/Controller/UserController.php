@@ -65,6 +65,17 @@ class UserController {
         }
     }
 
+    public static function getEmail(): void {
+        if($_SESSION["userId"] > 0) {
+            echo UserDAO::getEmail($_SESSION["userId"]);
+            exit();
+        }
+        else {
+            http_response_code(400);
+            exit();
+        }
+    }
+
     private static function validadeEmail(string $email): void {
         if(strlen($email) < 6 || strlen($email) > 255 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             http_response_code(400);

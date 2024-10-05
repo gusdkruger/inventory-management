@@ -9,12 +9,16 @@ class View {
     private const HTML_LOGIN = __DIR__ . "/html/login.html";
     private const HTML_SIGNUP = __DIR__ . "/html/signup.html";
 
-    private const HTML_LOGGED = __DIR__ . "/html/logged.html";
+    private const HTML_HEADER = __DIR__ . "/html/header.html";
+    private const HTML_MAIN = __DIR__ . "/html/main.html";
 
     public static function load(): void {
         $body = file_get_contents(self::HTML_START);
         if($_SESSION["userId"] > 0) {
-            $body .= file_get_contents(self::HTML_LOGGED);
+            ob_start();
+            require self::HTML_HEADER;
+            $body .= ob_get_clean();
+            $body .= file_get_contents(self::HTML_MAIN);
         }
         else {
             $body .= file_get_contents(self::HTML_LOGIN);

@@ -1,0 +1,14 @@
+<header>
+    <h2>Inventory Management</h2>
+    <label for="checkbox">
+        <img class="icon" src="./img/profile.png" alt="Profile Menu">
+    </label>
+    <input type="checkbox" id="checkbox">
+    <div class="menu">
+        <span hx-post="/getEmail" hx-trigger="load">Email</span>
+        <button>Change Email</button>
+        <button>Change Password</button>
+        <button>Delete Profile</button>
+        <button hx-post="/logout">Logout</button>
+    </div>
+</header>

@@ -42,9 +42,31 @@ class UserDAO {
             return $id;
         }
         catch(PDOException $e) {
-            http_response_code(500);
-            echo $e;
-            exit();
+            if($e->getCode() === "23000") {
+                http_response_code(400);
+                echo "Email is already in use";
+                exit();
+            }
+            else {
+                http_response_code(500);
+                echo $e;
+                exit();
+            }
+        }
+    }
+
+    public static function getEmail(int $id): string {
+        try {
+            $conn = ConnectionFactory::createConnection();
+            $stmt = $conn->prepare("SELECT email FROM user WHERE id = :id;");
+            $stmt->bindValue(":id", $id);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            ConnectionFactory::closeConnection($conn);
+            return $result["email"];
+        }
+        catch(PDOException $e) {
+            return "";
         }
     }
 }
