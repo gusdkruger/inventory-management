@@ -92,6 +92,42 @@
     }
 }
 
+#overlay {
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+#closeOverlay {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    border: none;
+    cursor: pointer;
+    padding: 6px 4px;
+    margin-top: 5px;
+    border-radius: 5px;
+    background-color: var(--light-orange);
+    transition: 0.2s ease-out;
+}
+
+#closeOverlay:hover {
+    background-color: var(--dark-orange);
+}
+
+.overlay-container {
+    border-radius: 10px;
+    background-color: var(--light-gray);
+    padding: 20px;
+}
+
 header {
     height: 60px;
     padding: 0 15px 0 15px;
@@ -132,21 +168,33 @@ header label,
     display: flex;
     flex-direction: column;
     gap: 10px;
+    max-width: 250px;
 }
 
 .menu span {
     color: var(--light-orange);
     font-size: 20px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0 0 10px 0;
 }
 
 .menu button {
     border: none;
     cursor: pointer;
-    background-color: var(--light-orange);
     padding: 6px 4px;
     margin-top: 5px;
     border-radius: 5px;
     transition: 0.2s ease-out;
+}
+
+.menu .button1 {
+    border: 1px solid var(--light-orange);
+    background-color: transparent;
+}
+
+.menu .button2 {
+    background-color: var(--light-orange);
 }
 
 .menu button:hover {

@@ -52,6 +52,10 @@ class UserController {
                     header("HX-Redirect: /");
                     exit();
                 }
+                else {
+                    http_response_code(500);
+                    exit();
+                }
             }
             else {
                 http_response_code(400);
@@ -69,6 +73,104 @@ class UserController {
         if($_SESSION["userId"] > 0) {
             echo UserDAO::getEmail($_SESSION["userId"]);
             exit();
+        }
+        else {
+            http_response_code(400);
+            exit();
+        }
+    }
+
+    public static function changeEmail(): void {
+        if($_SESSION["userId"] > 0 && isset($_POST["new-email"]) && isset($_POST["new-email-repeat"]) && isset($_POST["password"])) {
+            $userId = $_SESSION["userId"];
+            $newEmail = $_POST["new-email"];
+            $password = $_POST["password"];
+            self::validadeEmail($newEmail);
+            self::validadePassword($password);
+            if($newEmail === $_POST["new-email-repeat"]) {
+                if($newEmail !== UserDAO::getEmail($userId)) {
+                    if(UserDAO::validatePassword($userId, $password)) {
+                        if(UserDAO::changeEmail($userId, $newEmail)) {
+                            self::logout();
+                        }
+                        else {
+                            http_response_code(500);
+                            exit();
+                        }
+                    }
+                    else {
+                        http_response_code(401);
+                        echo "Invalid password";
+                        exit();
+                    }
+                }
+                else {
+                    http_response_code(401);
+                    echo "New email must be different";
+                    exit();
+                }
+            }
+            else {
+                http_response_code(400);
+                echo "Emails don't match";
+                exit();
+            }
+        }
+        else {
+            http_response_code(400);
+            exit();
+        }
+    }
+
+    public static function changePassword(): void {
+        if($_SESSION["userId"] > 0 && isset($_POST["new-password"]) && isset($_POST["new-password-repeat"]) && isset($_POST["current-password"])) {
+            $userId = $_SESSION["userId"];
+            $newPassword = $_POST["new-password"];
+            $currentPassword = $_POST["current-password"];
+            self::validadePassword($newPassword);
+            if($newPassword === $_POST["new-password-repeat"]) {
+                if(UserDAO::validatePassword($userId, $currentPassword)) {
+                    $passwordHash = password_hash($newPassword, PASSWORD_ARGON2ID);
+                    if(UserDAO::changePassword($userId, $passwordHash)) {
+                        self::logout();
+                    }
+                    else {
+                        http_response_code(500);
+                        exit();
+                    }
+                }
+                else {
+                    http_response_code(401);
+                    echo "Invalid password";
+                    exit();
+                }
+            }
+            else {
+                http_response_code(400);
+                echo "Passwords don't match";
+                exit();
+            }
+        }
+        else {
+            http_response_code(400);
+            exit();
+        }
+    }
+
+    public static function deleteProfile(): void {
+        if($_SESSION["userId"] > 0 && isset($_POST["password"])) {
+            $password = $_POST["password"];
+            self::validadePassword($password);
+            if(UserDAO::validatePassword($_SESSION["userId"], $password)) {
+                http_response_code(500);
+                echo "NOT IMPLEMENTED YET";
+                exit();
+            }
+            else {
+                http_response_code(401);
+                echo "Invalid password";
+                exit();
+            }
         }
         else {
             http_response_code(400);

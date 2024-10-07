@@ -5,10 +5,10 @@
     </label>
     <input type="checkbox" id="checkbox">
     <div class="menu">
-        <span hx-post="/getEmail" hx-trigger="load">Email</span>
-        <button>Change Email</button>
-        <button>Change Password</button>
-        <button>Delete Profile</button>
-        <button hx-post="/logout">Logout</button>
+        <span hx-get="/getEmail" hx-trigger="load">Email</span>
+        <button class="button1" hx-get="/templateChangeEmail" hx-target="#overlay" onclick="showOverlay();">Change email</button>
+        <button class="button1" hx-get="/templateChangePassword" hx-target="#overlay" onclick="showOverlay();">Change password</button>
+        <button class="button1" hx-get="/templateDeleteProfile" hx-target="#overlay" onclick="showOverlay();">Delete profile</button>
+        <button class="button2" hx-post="/logout">Logout</button>
     </div>
 </header>
