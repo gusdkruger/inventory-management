@@ -57,7 +57,7 @@ class UserDAO {
         try {
             $conn = ConnectionFactory::createConnection();
             $stmt = $conn->prepare("SELECT email FROM user WHERE id = :id;");
-            $stmt->bindValue(":id", $id);
+            $stmt->bindValue(":id", $id, PDO::PARAM_INT);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             ConnectionFactory::closeConnection($conn);
@@ -73,7 +73,7 @@ class UserDAO {
         try {
             $conn = ConnectionFactory::createConnection();
             $stmt = $conn->prepare("SELECT password FROM user WHERE id = :id;");
-            $stmt->bindValue(":id", $id);
+            $stmt->bindValue(":id", $id, PDO::PARAM_INT);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             ConnectionFactory::closeConnection($conn);
@@ -89,7 +89,7 @@ class UserDAO {
         try {
             $conn = ConnectionFactory::createConnection();
             $stmt = $conn->prepare("UPDATE user SET email = :email WHERE id = :id;");
-            $stmt->bindValue(":id", $id);
+            $stmt->bindValue(":id", $id, PDO::PARAM_INT);
             $stmt->bindValue(":email", $email);
             $success = $stmt->execute();
             ConnectionFactory::closeConnection($conn);
@@ -105,7 +105,7 @@ class UserDAO {
         try {
             $conn = ConnectionFactory::createConnection();
             $stmt = $conn->prepare("UPDATE user SET password = :password WHERE id = :id;");
-            $stmt->bindValue(":id", $id);
+            $stmt->bindValue(":id", $id, PDO::PARAM_INT);
             $stmt->bindValue(":password", $passwordHash);
             $success = $stmt->execute();
             ConnectionFactory::closeConnection($conn);
@@ -113,6 +113,27 @@ class UserDAO {
         }
         catch(PDOException $e) {
             http_response_code(500);
+            exit();
+        }
+    }
+
+    public static function delete(int $id): bool {
+        try {
+            $conn = ConnectionFactory::createConnection();
+            $stmt = $conn->prepare("DELETE FROM item WHERE userId = :userId;");
+            $stmt->bindValue(":userId", $id, PDO::PARAM_INT);
+            $success = $stmt->execute();
+            if($success) {
+                $stmt = $conn->prepare("DELETE FROM user WHERE id = :id;");
+                $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+                $success = $stmt->execute();
+            }
+            ConnectionFactory::closeConnection($conn);
+            return $success;
+        }
+        catch(PDOException $e) {
+            http_response_code(500);
+            echo "CAIU AQ";
             exit();
         }
     }

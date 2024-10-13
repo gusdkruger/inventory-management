@@ -1,0 +1,13 @@
+<form class="ajax-form itemForm" hx-post="/addItem" hx-target="#error-container" hx-ext="response-targets" hx-target-error="#error-container">
+    <label for="input-name">Name</label>
+    <input id="input-name" name="name" type="text" minlength="1" maxlength="255" required>
+    <label for="input-quantity">Quantity</label>
+    <input id="input-quantity" name="quantity" type="number" max="999999999" required>
+    <label for="input-location">Location</label>
+    <input id="input-location" name="location" type="text" maxlength="255">
+    <label for="input-description">Description</label>
+    <input id="input-description" name="description" type="text" maxlength="255">
+    <button type="submit">Add</button>
+    <div id="error-container"></div>
+    <a class="ajax-nav" href="/">Go back</a>
+</form>

@@ -157,14 +157,19 @@ class UserController {
         }
     }
 
-    public static function deleteProfile(): void {
+    public static function delete(): void {
         if($_SESSION["userId"] > 0 && isset($_POST["password"])) {
+            $userId = $_SESSION["userId"];
             $password = $_POST["password"];
             self::validadePassword($password);
-            if(UserDAO::validatePassword($_SESSION["userId"], $password)) {
-                http_response_code(500);
-                echo "NOT IMPLEMENTED YET";
-                exit();
+            if(UserDAO::validatePassword($userId, $password)) {
+                if(UserDAO::delete($userId)) {
+                    self::logout();
+                }
+                else {
+                    http_response_code(500);
+                    exit();
+                }
             }
             else {
                 http_response_code(401);

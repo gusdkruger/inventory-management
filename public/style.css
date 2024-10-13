@@ -59,10 +59,10 @@
     margin-top: 5px;
     border-radius: 5px;
     transition: 0.2s ease-out;
-}
 
-.ajax-form button:hover {
-    background-color: var(--dark-orange);
+    &:hover {
+        background-color: var(--dark-orange);
+    }
 }
 
 #error-container {
@@ -78,10 +78,11 @@
     margin: 0 auto;
     transition: 0.3s ease-out;
     font-size: 20px;
-}
+    text-decoration: none;
 
-.ajax-nav:hover {
-    color: var(--light-orange);
+    &:hover {
+        color: var(--light-orange);
+    }
 }
 
 @media (width > 425px) {
@@ -116,10 +117,10 @@
     border-radius: 5px;
     background-color: var(--light-orange);
     transition: 0.2s ease-out;
-}
 
-#closeOverlay:hover {
-    background-color: var(--dark-orange);
+    &:hover {
+        background-color: var(--dark-orange);
+    }
 }
 
 .overlay-container {
@@ -179,29 +180,63 @@ header label,
     padding: 0 0 10px 0;
 }
 
-.menu button {
+.button1, .button2 {
     border: none;
     cursor: pointer;
     padding: 6px 4px;
     margin-top: 5px;
     border-radius: 5px;
     transition: 0.2s ease-out;
+
+    &:hover {
+        background-color: var(--dark-orange);
+    }
 }
 
-.menu .button1 {
+.button1 {
     border: 1px solid var(--light-orange);
     background-color: transparent;
 }
 
-.menu .button2 {
+.button2 {
     background-color: var(--light-orange);
 }
 
-.menu button:hover {
-    background-color: var(--dark-orange);
+body {
+    background-color: var(--dark-gray);
 }
 
 main {
-    background-color: var(--dark-gray);
-    height: calc(100vh - 60px);
+    min-height: calc(100vh - 60px);
+    width: clamp(300px, 80%, 1600px);
+    overflow: hidden;
+    margin: 0 auto;
+    overflow-x: auto;
+}
+
+.addButton {
+    margin: 15px;
+}
+
+#table {
+    border: 1px solid var(--light-orange);
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+#table th {
+    border: 1px solid var(--light-orange);
+    padding: 3px 10px;
+    max-width: 395px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.itemForm {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin: 0 auto;
+    padding: 50px 0;
 }
