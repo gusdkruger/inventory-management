@@ -1,0 +1,8 @@
+<main>
+    <button class="button2 addButton" hx-get="/templateAddItem" hx-target="main">Add Item</button>
+    <table id="table">
+        <tr>
+            <th hx-get="/items" hx-trigger="load" hx-target="#table">Loading Items...</th>
+        </tr>
+    </table>
+</main>

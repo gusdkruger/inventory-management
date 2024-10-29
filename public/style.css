@@ -6,93 +6,6 @@
     --white: #F2F2F2;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    font-size: 18px;
-    color: var(--white);
-}
-
-.ajax-container {
-    height: 100vh;
-    background-color: var(--dark-gray);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.ajax-content {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 300px;
-}
-
-.ajax-title {
-    font-size: 25px;
-}
-
-.ajax-form {
-    display: flex;
-    flex-direction: column;
-}
-
-.ajax-form label {
-    margin: 0 0 5px 5px;
-}
-
-.ajax-form input {
-    margin-bottom: 15px;
-    background-color: transparent;
-    border: 1px solid var(--white);
-    border-radius: 5px;
-    padding: 4px;
-}
-
-.ajax-form button {
-    border: none;
-    cursor: pointer;
-    background-color: var(--light-orange);
-    font-size: 20px;
-    font-weight: bold;
-    padding: 6px 4px;
-    margin-top: 5px;
-    border-radius: 5px;
-    transition: 0.2s ease-out;
-
-    &:hover {
-        background-color: var(--dark-orange);
-    }
-}
-
-#error-container {
-    text-align: center;
-    color: var(--light-orange);
-    font-size: 20px;
-    margin: 10px 0 0;
-}
-
-.ajax-nav {
-    cursor: pointer;
-    padding: 5px 10px;
-    margin: 0 auto;
-    transition: 0.3s ease-out;
-    font-size: 20px;
-    text-decoration: none;
-
-    &:hover {
-        color: var(--light-orange);
-    }
-}
-
-@media (width > 425px) {
-    .ajax-content {
-        border-radius: 10px;
-        background-color: var(--light-gray);
-        padding: 20px;
-    }
-}
-
 #overlay {
     width: 100vw;
     height: 100vh;
@@ -200,18 +113,6 @@ header label,
 
 .button2 {
     background-color: var(--light-orange);
-}
-
-body {
-    background-color: var(--dark-gray);
-}
-
-main {
-    min-height: calc(100vh - 60px);
-    width: clamp(300px, 80%, 1600px);
-    overflow: hidden;
-    margin: 0 auto;
-    overflow-x: auto;
 }
 
 .addButton {

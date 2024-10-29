@@ -10,8 +10,7 @@ class UserController {
         if(isset($_POST["email"]) && isset($_POST["password"])) {
             $email = $_POST["email"];
             $password = $_POST["password"];
-            self::validadeEmail($email);
-            self::validadePassword($password);
+            self::validateData($email, $password);
             $userId = UserDAO::login($email, $password);
             if($userId > 0) {
                 $_SESSION["userId"] = $userId;
@@ -20,18 +19,18 @@ class UserController {
             }
             else {
                 http_response_code(401);
-                echo "Invalid email or password";
+                header("HX-Trigger: invalidLoginInfo");
                 exit();
             }
         }
         else {
-            http_response_code(400);
+            http_response_code(500);
             exit();
         }
     }
 
     public static function logout(): void {
-        $_SESSION["userId"] = null;
+        unset($_SESSION["userId"]);
         http_response_code(303);
         header("HX-Redirect: /");
         exit();
@@ -41,8 +40,7 @@ class UserController {
         if(isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["password-repeat"])) {
             $email = $_POST["email"];
             $password = $_POST["password"];
-            self::validadeEmail($email);
-            self::validadePassword($password);
+            self::validateData($email, $password);
             if($password === $_POST["password-repeat"]) {
                 $passwordHash = password_hash($password, PASSWORD_ARGON2ID);
                 $userId = UserDAO::signup($email, $passwordHash);
@@ -59,7 +57,7 @@ class UserController {
             }
             else {
                 http_response_code(400);
-                echo "Passwords don't match";
+                header("HX-Trigger: passwordsDontMatch");
                 exit();
             }
         }
@@ -183,19 +181,45 @@ class UserController {
         }
     }
 
-    private static function validadeEmail(string $email): void {
-        if(strlen($email) < 6 || strlen($email) > 255 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    private static function validateData(string $email, string $password): bool {
+        $trigger = "HX-Trigger: ";
+        $valid = true;
+        if(!self::validadeEmail($email)) {
+            $trigger .= "invalidEmail";
+            $valid = false;
+        }
+        if(!self::validadePassword($password)) {
+            if($valid) {
+                $trigger .= "invalidPassword";
+            }
+            else {
+                $trigger .= ", invalidPassword";
+            }
+            $valid = false;
+        }
+        if(!$valid) {
             http_response_code(400);
-            echo "Email must be between 6 and 255 characters";
+            header($trigger);
             exit();
+        }
+        return $valid;
+    }
+
+    private static function validadeEmail(string $email): bool {
+        if(strlen($email) < 6 || strlen($email) > 255 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return false;
+        }
+        else {
+            return true;
         }
     }
 
-    private static function validadePassword(string $password): void {
+    private static function validadePassword(string $password): bool {
         if(strlen($password) < 6 || strlen($password) > 255) {
-            http_response_code(400);
-            echo "Password must be between 6 and 255 characters";
-            exit();
+            return false;
+        }
+        else {
+            return true;
         }
     }
 }

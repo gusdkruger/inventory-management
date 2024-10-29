@@ -10,12 +10,12 @@ spl_autoload_register(function (string $className) {
 });
 
 session_set_cookie_params([
-    'lifetime' => 0,
-    'path' => '/',
-    'domain' => '',
-    'secure' => true,
-    'httponly' => true,
-    'samesite' => 'Strict'
+    "lifetime" => 0,
+    "path" => "/",
+    "domain" => "",
+    "secure" => true,
+    "httponly" => true,
+    "samesite" => "Strict"
 ]);
 session_start();
 session_regenerate_id();
@@ -34,8 +34,12 @@ if(array_key_exists($key, $routes)) {
     if(is_callable($staticFunction)) {
         call_user_func($staticFunction);
     }
+    else {
+        http_response_code(500);
+        exit();
+    }
 }
 else {
     http_response_code(404);
-    echo "404 NOT FOUND<br>$key";
+    exit();
 }

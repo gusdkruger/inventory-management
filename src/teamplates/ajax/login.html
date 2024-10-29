@@ -1,0 +1,17 @@
+<div id="ajax-container" class="container my-4 px-4 align-self-center" style="max-width: 400px;">
+    <h2 class="fs-3 mb-3">Login</h2>
+    <form hx-post="/login" action="">
+        <div class="form-floating mb-3">
+            <input class="form-control" id="input-email" placeholder="" name="email" type="email" autocomplete="email">
+            <label for="input-email">Email</label>
+            <small class="form-text text-danger" id="email-feedback"></small>
+        </div>
+        <div class="form-floating mb-3">
+            <input class="form-control" id="input-password" placeholder="" name="password" type="password" autocomplete="password">
+            <label for="input-password">Password</label>
+            <small class="form-text text-danger" id="password-feedback"></small>
+        </div>
+        <button class="btn btn-primary mb-3 py-2" style="width: 100%;" type="submit">Login</button>
+    </form>
+    <a class="d-flex justify-content-center link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" style="cursor: pointer;" hx-post="/templateSignup" hx-target="#ajax-container" hx-swap="outerHTML">Create an account</a>
+</div>

@@ -1,0 +1,14 @@
+<header>
+    <h2>Inventory Management</h2>
+    <label for="checkbox">
+        <img class="icon" src="./img/profile.png" alt="Profile Menu">
+    </label>
+    <input type="checkbox" id="checkbox">
+    <div class="menu">
+        <span hx-get="/getEmail" hx-trigger="load">Email</span>
+        <button class="button1" hx-get="/templateChangeEmail" hx-target="#overlay" onclick="showOverlay();">Change email</button>
+        <button class="button1" hx-get="/templateChangePassword" hx-target="#overlay" onclick="showOverlay();">Change password</button>
+        <button class="button1" hx-get="/templateDeleteProfile" hx-target="#overlay" onclick="showOverlay();">Delete profile</button>
+        <button class="button2" hx-post="/logout">Logout</button>
+    </div>
+</header>

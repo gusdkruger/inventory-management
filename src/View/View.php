@@ -5,27 +5,29 @@ namespace InventoryManagement\View;
 use InventoryManagement\DAO\ItemDAO;
 
 class View {
-    private const HTML_START = __DIR__ . "/html/start.html";
-    private const HTML_END = __DIR__ . "/html/end.html";
+    private const HTML_START = __DIR__ . "/../teamplates/start.html";
+    private const HTML_END = __DIR__ . "/../teamplates/end.html";
 
-    private const HTML_LOGIN = __DIR__ . "/html/login.html";
-    private const HTML_SIGNUP = __DIR__ . "/html/signup.html";
+    private const HTML_AJAX_START = __DIR__ . "/../teamplates/ajax/ajaxStart.html";
+    private const HTML_AJAX_END = __DIR__ . "/../teamplates/ajax/ajaxEnd.html";
+    private const HTML_LOGIN = __DIR__ . "/../teamplates/ajax/login.html";
+    private const HTML_SIGNUP = __DIR__ . "/../teamplates/ajax/signup.html";
 
-    private const HTML_HEADER = __DIR__ . "/html/header.html";
-    private const HTML_MAIN = __DIR__ . "/html/main.html";
+    private const HTML_HEADER = __DIR__ . "/../teamplates/header.html";
+    private const HTML_MAIN = __DIR__ . "/../teamplates/main.html";
 
-    private const HTML_OVERLAY = __DIR__ . "/html/overlay.html";
-    private const HTML_BUTTON_CLOSE_OVERLAY = __DIR__ . "/html/buttonCloseOverlay.html";
+    private const HTML_OVERLAY = __DIR__ . "/../teamplates/overlay.html";
+    private const HTML_BUTTON_CLOSE_OVERLAY = __DIR__ . "/../teamplates/buttonCloseOverlay.html";
 
-    private const HTML_CHANGE_EMAIL = __DIR__ . "/html/changeEmail.html";
-    private const HTML_CHANGE_PASSWORD = __DIR__ . "/html/changePassword.html";
-    private const HTML_DELETE_PROFILE = __DIR__ . "/html/deleteProfile.html";
+    private const HTML_CHANGE_EMAIL = __DIR__ . "/../teamplates/changeEmail.html";
+    private const HTML_CHANGE_PASSWORD = __DIR__ . "/../teamplates/changePassword.html";
+    private const HTML_DELETE_PROFILE = __DIR__ . "/../teamplates/deleteProfile.html";
 
-    private const HTML_ADD_ITEM = __DIR__ . "/html/addItem.html";
-    private const HTML_NO_ITEMS = __DIR__ . "/html/noItems.html";
-    private const HTML_TABLE_HEADER = __DIR__ . "/html/tableHeader.html";
-    private const PHP_ITEM = __DIR__ . "/html/item.php";
-    private const PHP_EDIT_ITEM = __DIR__ . "/html/editItem.php";
+    private const HTML_ADD_ITEM = __DIR__ . "/../teamplates/addItem.html";
+    private const HTML_NO_ITEMS = __DIR__ . "/../teamplates/noItems.html";
+    private const HTML_TABLE_HEADER = __DIR__ . "/../teamplates/tableHeader.html";
+    private const PHP_ITEM = __DIR__ . "/../teamplates/item.php";
+    private const PHP_EDIT_ITEM = __DIR__ . "/../teamplates/editItem.php";
 
     public static function load(): void {
         $body = file_get_contents(self::HTML_START);
@@ -35,7 +37,9 @@ class View {
             $body .= file_get_contents(self::HTML_MAIN);
         }
         else {
+            $body .= file_get_contents(self::HTML_AJAX_START);
             $body .= file_get_contents(self::HTML_LOGIN);
+            $body .= file_get_contents(self::HTML_AJAX_END);
         }
         $body .= file_get_contents(self::HTML_END);
         echo $body;
@@ -58,12 +62,12 @@ class View {
         exit();
     }
 
-    public static function getTemplateLogin(): void {
+    public static function templateLogin(): void {
         echo file_get_contents(self::HTML_LOGIN);
         exit();
     }
 
-    public static function getTemplateSignup(): void {
+    public static function templateSignup(): void {
         echo file_get_contents(self::HTML_SIGNUP);
         exit();
     }

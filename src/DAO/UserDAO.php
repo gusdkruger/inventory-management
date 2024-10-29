@@ -20,11 +20,12 @@ class UserDAO {
                 return $result["id"];
             }
             else {
-                return 0;
+                return -1;
             }
         }
         catch(PDOException $e) {
             http_response_code(500);
+            echo "Internal Server Error";
             exit();
         }
     }
@@ -36,13 +37,14 @@ class UserDAO {
             $stmt->bindValue(":email", $email);
             $stmt->bindValue(":passwordHash", $passwordHash);
             $stmt->execute();
-            $id = $conn->lastInsertId() ?? 0;
+            $id = $conn->lastInsertId() ?? -1;
             ConnectionFactory::closeConnection($conn);
             return $id;
         }
         catch(PDOException $e) {
             if($e->getCode() === "23000") {
                 http_response_code(400);
+                header("HX-Trigger: emailAlreadyBeingUsed");
                 echo "Email is already in use";
                 exit();
             }
