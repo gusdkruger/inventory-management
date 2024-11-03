@@ -10,7 +10,14 @@ class UserController {
         if(isset($_POST["email"]) && isset($_POST["password"])) {
             $email = $_POST["email"];
             $password = $_POST["password"];
-            self::validateData($email, $password);
+            $hxTrigger = [];
+            if(!self::validadeEmail($email)) {
+                $hxTrigger[] = "invalidEmail";
+            }
+            if(!self::validadePassword($password)) {
+                $hxTrigger[] = "invalidPassword";
+            }
+            self::respond($hxTrigger);
             $userId = UserDAO::login($email, $password);
             if($userId > 0) {
                 $_SESSION["userId"] = $userId;
@@ -40,24 +47,28 @@ class UserController {
         if(isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["password-repeat"])) {
             $email = $_POST["email"];
             $password = $_POST["password"];
-            self::validateData($email, $password);
-            if($password === $_POST["password-repeat"]) {
-                $passwordHash = password_hash($password, PASSWORD_ARGON2ID);
-                $userId = UserDAO::signup($email, $passwordHash);
-                if($userId > 0) {
-                    $_SESSION["userId"] = $userId;
-                    http_response_code(201);
-                    header("HX-Redirect: /");
-                    exit();
-                }
-                else {
-                    http_response_code(500);
-                    exit();
-                }
+            $repeatPassword = $_POST["password-repeat"];
+            $hxTrigger = [];
+            if(!self::validadeEmail($email)) {
+                $hxTrigger[] = "invalidEmail";
+            }
+            if(!self::validadePassword($password)) {
+                $hxTrigger[] = "invalidPassword";
+            }
+            if(!self::validadePassword($repeatPassword) || $password !== $repeatPassword) {
+                $hxTrigger[] = "passwordsDidntMatch";
+            }
+            self::respond($hxTrigger);
+            $passwordHash = password_hash($password, PASSWORD_ARGON2ID);
+            $userId = UserDAO::signup($email, $passwordHash);
+            if($userId > 0) {
+                $_SESSION["userId"] = $userId;
+                http_response_code(201);
+                header("HX-Redirect: /");
+                exit();
             }
             else {
-                http_response_code(400);
-                header("HX-Trigger: passwordsDontMatch");
+                http_response_code(500);
                 exit();
             }
         }
@@ -82,35 +93,38 @@ class UserController {
         if($_SESSION["userId"] > 0 && isset($_POST["new-email"]) && isset($_POST["new-email-repeat"]) && isset($_POST["password"])) {
             $userId = $_SESSION["userId"];
             $newEmail = $_POST["new-email"];
+            $newEmailRepeat = $_POST["new-email-repeat"];
             $password = $_POST["password"];
-            self::validadeEmail($newEmail);
-            self::validadePassword($password);
-            if($newEmail === $_POST["new-email-repeat"]) {
-                if($newEmail !== UserDAO::getEmail($userId)) {
-                    if(UserDAO::validatePassword($userId, $password)) {
-                        if(UserDAO::changeEmail($userId, $newEmail)) {
-                            self::logout();
-                        }
-                        else {
-                            http_response_code(500);
-                            exit();
-                        }
+            $hxTrigger = [];
+            if(!self::validadeEmail($newEmail)) {
+                $hxTrigger[] = "invalidEmail";
+            }
+            if(!self::validadeEmail($newEmailRepeat) || $newEmail !== $newEmailRepeat) {
+                $hxTrigger[] = "emailsDontMatch";
+            }
+            if(!self::validadePassword($password)) {
+                $hxTrigger[] = "invalidPassword";
+            }
+            self::respond($hxTrigger);
+            if($newEmail !== UserDAO::getEmail($userId)) {
+                if(UserDAO::validatePassword($userId, $password)) {
+                    if(UserDAO::changeEmail($userId, $newEmail)) {
+                        self::logout();
                     }
                     else {
-                        http_response_code(401);
-                        echo "Invalid password";
+                        http_response_code(500);
                         exit();
                     }
                 }
                 else {
                     http_response_code(401);
-                    echo "New email must be different";
+                    header("HX-Trigger: wrongPassword");
                     exit();
                 }
             }
             else {
                 http_response_code(400);
-                echo "Emails don't match";
+                header("HX-Trigger: emailMustBeDifferent");
                 exit();
             }
         }
@@ -121,12 +135,23 @@ class UserController {
     }
 
     public static function changePassword(): void {
-        if($_SESSION["userId"] > 0 && isset($_POST["new-password"]) && isset($_POST["new-password-repeat"]) && isset($_POST["current-password"])) {
+        if($_SESSION["userId"] > 0 && isset($_POST["new-password"]) && isset($_POST["new-password-repeat"]) && isset($_POST["password"])) {
             $userId = $_SESSION["userId"];
             $newPassword = $_POST["new-password"];
-            $currentPassword = $_POST["current-password"];
-            self::validadePassword($newPassword);
-            if($newPassword === $_POST["new-password-repeat"]) {
+            $newPasswordRepeat = $_POST["new-password-repeat"];
+            $currentPassword = $_POST["password"];
+            $hxTrigger = [];
+            if(!self::validadePassword($newPassword)) {
+                $hxTrigger[] = "invalidNewPassword";
+            }
+            if(!self::validadePassword($newPasswordRepeat) || $newPassword !== $newPasswordRepeat) {
+                $hxTrigger[] = "newPasswordsDidntMatch";
+            }
+            if(!self::validadePassword($currentPassword)) {
+                $hxTrigger[] = "invalidPassword";
+            }
+            self::respond($hxTrigger);
+            if($newPassword === $newPasswordRepeat) {
                 if(UserDAO::validatePassword($userId, $currentPassword)) {
                     $passwordHash = password_hash($newPassword, PASSWORD_ARGON2ID);
                     if(UserDAO::changePassword($userId, $passwordHash)) {
@@ -139,7 +164,7 @@ class UserController {
                 }
                 else {
                     http_response_code(401);
-                    echo "Invalid password";
+                    header("HX-Trigger: wrongPassword");
                     exit();
                 }
             }
@@ -181,30 +206,6 @@ class UserController {
         }
     }
 
-    private static function validateData(string $email, string $password): bool {
-        $trigger = "HX-Trigger: ";
-        $valid = true;
-        if(!self::validadeEmail($email)) {
-            $trigger .= "invalidEmail";
-            $valid = false;
-        }
-        if(!self::validadePassword($password)) {
-            if($valid) {
-                $trigger .= "invalidPassword";
-            }
-            else {
-                $trigger .= ", invalidPassword";
-            }
-            $valid = false;
-        }
-        if(!$valid) {
-            http_response_code(400);
-            header($trigger);
-            exit();
-        }
-        return $valid;
-    }
-
     private static function validadeEmail(string $email): bool {
         if(strlen($email) < 6 || strlen($email) > 255 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return false;
@@ -220,6 +221,18 @@ class UserController {
         }
         else {
             return true;
+        }
+    }
+
+    private static function respond(array $hxTrigger): void {
+        if(count($hxTrigger) > 0) {
+            http_response_code(400);
+            $header = "HX-Trigger: " . $hxTrigger[0];
+            for($i = 1; $i < count($hxTrigger); $i++) {
+                $header .= ", " . $hxTrigger[$i];
+            }
+            header($header);
+            exit();
         }
     }
 }

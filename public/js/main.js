@@ -1,12 +1,3 @@
-import { addLoginAndSignupEvents } from "./event/loginAndSignupEvents.js";
+import { addUserFormEvents } from "./event/userFormEvents.js";
 
-addLoginAndSignupEvents();
-
-function showOverlay() {
-    document.getElementById("overlay").style.display = "flex";
-}
-
-function closeOverlay() {
-    document.getElementById("overlay").style.display = "none";
-    document.getElementById("overlay").innerHTML = "";
-}
+addUserFormEvents();

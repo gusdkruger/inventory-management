@@ -8,20 +8,19 @@ class View {
     private const HTML_START = __DIR__ . "/../templates/start.html";
     private const HTML_END = __DIR__ . "/../templates/end.html";
 
-    private const HTML_AJAX_START = __DIR__ . "/../templates/ajax/ajaxStart.html";
-    private const HTML_AJAX_END = __DIR__ . "/../templates/ajax/ajaxEnd.html";
-    private const HTML_LOGIN = __DIR__ . "/../templates/ajax/login.html";
-    private const HTML_SIGNUP = __DIR__ . "/../templates/ajax/signup.html";
+    private const HTML_AJAX_UNAUTH_START = __DIR__ . "/../templates/ajaxUnauth/ajaxUnauthStart.html";
+    private const HTML_AJAX_UNAUTH_END = __DIR__ . "/../templates/ajaxUnauth/ajaxUnauthEnd.html";
+    private const HTML_LOGIN = __DIR__ . "/../templates/ajaxUnauth/login.html";
+    private const HTML_SIGNUP = __DIR__ . "/../templates/ajaxUnauth/signup.html";
 
     private const HTML_HEADER = __DIR__ . "/../templates/header.html";
-    private const HTML_MAIN = __DIR__ . "/../templates/main.html";
 
-    private const HTML_OVERLAY = __DIR__ . "/../templates/overlay.html";
-    private const HTML_BUTTON_CLOSE_OVERLAY = __DIR__ . "/../templates/buttonCloseOverlay.html";
+    private const HTML_AJAX_AUTH_START = __DIR__ . "/../templates/ajaxAuth/ajaxAuthStart.html";
+    private const HTML_AJAX_AUTH_END = __DIR__ . "/../templates/ajaxAuth/ajaxAuthEnd.html";
 
-    private const HTML_CHANGE_EMAIL = __DIR__ . "/../templates/changeEmail.html";
-    private const HTML_CHANGE_PASSWORD = __DIR__ . "/../templates/changePassword.html";
-    private const HTML_DELETE_PROFILE = __DIR__ . "/../templates/deleteProfile.html";
+    private const HTML_CHANGE_EMAIL = __DIR__ . "/../templates/ajaxAuth/changeEmail.html";
+    private const HTML_CHANGE_PASSWORD = __DIR__ . "/../templates/ajaxAuth/changePassword.html";
+    private const HTML_DELETE_PROFILE = __DIR__ . "/../templates/ajaxAuth/deleteProfile.html";
 
     private const HTML_ADD_ITEM = __DIR__ . "/../templates/addItem.html";
     private const HTML_NO_ITEMS = __DIR__ . "/../templates/noItems.html";
@@ -32,14 +31,14 @@ class View {
     public static function load(): void {
         $body = file_get_contents(self::HTML_START);
         if($_SESSION["userId"] > 0) {
-            $body .= file_get_contents(self::HTML_OVERLAY);
             $body .= file_get_contents(self::HTML_HEADER);
-            $body .= file_get_contents(self::HTML_MAIN);
+            $body .= file_get_contents(self::HTML_AJAX_AUTH_START);
+            $body .= file_get_contents(self::HTML_AJAX_AUTH_END);
         }
         else {
-            $body .= file_get_contents(self::HTML_AJAX_START);
+            $body .= file_get_contents(self::HTML_AJAX_UNAUTH_START);
             $body .= file_get_contents(self::HTML_LOGIN);
-            $body .= file_get_contents(self::HTML_AJAX_END);
+            $body .= file_get_contents(self::HTML_AJAX_UNAUTH_END);
         }
         $body .= file_get_contents(self::HTML_END);
         echo $body;
@@ -72,24 +71,19 @@ class View {
         exit();
     }
 
-    public static function getTemplateChangeEmail(): void {
-        $body = file_get_contents(self::HTML_BUTTON_CLOSE_OVERLAY);
-        $body .= file_get_contents(self::HTML_CHANGE_EMAIL);
-        echo $body;
+    public static function templateChangeEmail(): void {
+        echo file_get_contents(self::HTML_CHANGE_EMAIL);
         exit();
     }
 
-    public static function getTemplateChangePassword(): void {
-        $body = file_get_contents(self::HTML_BUTTON_CLOSE_OVERLAY);
-        $body .= file_get_contents(self::HTML_CHANGE_PASSWORD);
-        echo $body;
+    public static function templateChangePassword(): void {
+        echo file_get_contents(self::HTML_CHANGE_PASSWORD);
         exit();
     }
 
-    public static function getTemplateDeleteProfile(): void {
-        $body = file_get_contents(self::HTML_BUTTON_CLOSE_OVERLAY);
-        $body .= file_get_contents(self::HTML_DELETE_PROFILE);
-        echo $body;
+    public static function templateDeleteProfile(): void {
+        //echo file_get_contents(self::HTML_DELETE_PROFILE);
+        echo "TO DO";
         exit();
     }
 

@@ -1,14 +1,33 @@
-<header>
-    <h2>Inventory Management</h2>
-    <label for="checkbox">
-        <img class="icon" src="./img/profile.png" alt="Profile Menu">
-    </label>
-    <input type="checkbox" id="checkbox">
-    <div class="menu">
-        <span hx-get="/getEmail" hx-trigger="load">Email</span>
-        <button class="button1" hx-get="/templateChangeEmail" hx-target="#overlay" onclick="showOverlay();">Change email</button>
-        <button class="button1" hx-get="/templateChangePassword" hx-target="#overlay" onclick="showOverlay();">Change password</button>
-        <button class="button1" hx-get="/templateDeleteProfile" hx-target="#overlay" onclick="showOverlay();">Delete profile</button>
-        <button class="button2" hx-post="/logout">Logout</button>
+<header class="navbar bg-light sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center">
+            <img src="./img/favicon.png" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
+            <h1 class="d-none d-sm-block fs-4 mb-0 ms-1">Inventory Management</h1>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title overflow-hidden" id="offcanvasNavbarLabel" hx-post="/getEmail" hx-trigger="load">Email</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-end flex-grow-1 px-3">
+                    <li>
+                        <button class="btn btn-outline-primary w-100 mb-3" data-bs-dismiss="offcanvas" hx-post="/templateChangeEmail" hx-target="main">Change email</button>
+                    </li>
+                    <li>
+                        <button class="btn btn-outline-primary w-100 mb-3" data-bs-dismiss="offcanvas" hx-post="/templateChangePassword" hx-target="main">Change password</button>
+                    </li>
+                    <li>
+                        <button class="btn btn-outline-danger w-100 mb-3" data-bs-dismiss="offcanvas" hx-post="/templateDeleteProfile" hx-target="main">Delete profile</button>
+                    </li>
+                    <li>
+                        <button class="btn btn-primary w-100 mb-3" hx-post="/logout">Logout</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 </header>
