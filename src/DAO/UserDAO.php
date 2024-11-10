@@ -25,7 +25,6 @@ class UserDAO {
         }
         catch(PDOException $e) {
             http_response_code(500);
-            echo "Internal Server Error";
             exit();
         }
     }
@@ -44,8 +43,23 @@ class UserDAO {
         catch(PDOException $e) {
             if($e->getCode() === "23000") {
                 http_response_code(400);
-                header("HX-Trigger: emailAlreadyBeingUsed");
-                echo "Email is already in use";
+                header("Content-type: application/json");
+                $body = [];
+                $body[] = [
+                    "input" => "input-email",
+                    "valid" => "false",
+                    "small" => "email-feedback",
+                    "text" => "Email is already in use"
+                ];
+                $body[] = [
+                    "input" => "input-password",
+                    "value" => "reset"
+                ];
+                $body[] = [
+                    "input" => "input-password-repeat",
+                    "value" => "reset"
+                ];
+                echo json_encode($body);
                 exit();
             }
             else {
@@ -98,8 +112,31 @@ class UserDAO {
             return $success;
         }
         catch(PDOException $e) {
-            http_response_code(500);
-            exit();
+            if($e->getCode() === "23000") {
+                http_response_code(400);
+                header("Content-type: application/json");
+                $body = [];
+                $body[] = [
+                    "input" => "input-new-email",
+                    "valid" => "false",
+                    "small" => "new-email-feedback",
+                    "text" => "Email is already in use"
+                ];
+                $body[] = [
+                    "input" => "input-new-email-repeat",
+                    "valid" => "false"
+                ];
+                $body[] = [
+                    "input" => "input-password",
+                    "value" => "reset"
+                ];
+                echo json_encode($body);
+                exit();
+            }
+            else {
+                http_response_code(500);
+                exit();
+            }
         }
     }
 
@@ -135,7 +172,6 @@ class UserDAO {
         }
         catch(PDOException $e) {
             http_response_code(500);
-            echo "CAIU AQ";
             exit();
         }
     }

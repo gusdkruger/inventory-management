@@ -1,0 +1,19 @@
+<form class="mx-auto" style="width: 90%; max-width: 400px;" hx-post="/changeEmail">
+    <h2 class="fs-4 mb-3">Change Email</h2>
+    <div class="form-floating mb-2">
+        <input class="form-control" id="input-new-email" placeholder="" name="new-email" type="email">
+        <label for="input-email">New Email</label>
+        <small class="form-text text-danger ms-2" id="new-email-feedback"></small>
+    </div>
+    <div class="form-floating mb-2">
+        <input class="form-control" id="input-new-email-repeat" placeholder="" name="new-email-repeat" type="email">
+        <label for="input-email-repeat">Repeat New Email</label>
+        <small class="form-text text-danger ms-2" id="new-email-repeat-feedback"></small>
+    </div>
+    <div class="form-floating mb-2">
+        <input class="form-control" id="input-password" placeholder="" name="password" type="password">
+        <label for="input-password">Confirm Password</label>
+        <small class="form-text text-danger ms-2" id="password-feedback"></small>
+    </div>
+    <button class="btn btn-primary mb-2 py-2 w-100" type="submit">Change Email</button>
+</form>

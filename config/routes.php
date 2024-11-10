@@ -12,13 +12,14 @@ return [
     "POST|/changeEmail" => [\InventoryManagement\Controller\UserController::class, "changeEmail"],
     "POST|/templateChangePassword" => [\InventoryManagement\View\View::class, "templateChangePassword"],
     "POST|/changePassword" => [\InventoryManagement\Controller\UserController::class, "changePassword"],
-
     "POST|/templateDeleteProfile" => [\InventoryManagement\View\View::class, "templateDeleteProfile"],
+    "POST|/deleteProfile" => [\InventoryManagement\Controller\UserController::class, "delete"],
+    /*
     "GET|/templateAddItem" => [\InventoryManagement\View\View::class, "getTemplateAddItem"],
     "GET|/items" => [\InventoryManagement\Controller\ItemController::class, "read"],
-    "POST|/deleteProfile" => [\InventoryManagement\Controller\UserController::class, "delete"],
     "POST|/addItem" => [\InventoryManagement\Controller\ItemController::class, "create"],
     "POST|/deleteItem" => [\InventoryManagement\Controller\ItemController::class, "delete"],
     "POST|/templateEditItem" => [\InventoryManagement\View\View::class, "getTemplateEditItem"],
     "POST|/editItem" => [\InventoryManagement\Controller\ItemController::class, "update"]
+    */
 ];

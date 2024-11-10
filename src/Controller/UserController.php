@@ -10,14 +10,29 @@ class UserController {
         if(isset($_POST["email"]) && isset($_POST["password"])) {
             $email = $_POST["email"];
             $password = $_POST["password"];
-            $hxTrigger = [];
+            $body = [];
             if(!self::validadeEmail($email)) {
-                $hxTrigger[] = "invalidEmail";
+                $body[] = [
+                    "input" => "input-email",
+                    "valid" => "false",
+                    "small" => "email-feedback",
+                    "text" => "Email must be between 6 and 255 characters"
+                ];
+                $body[] = [
+                    "input" => "input-password",
+                    "value" => "reset"
+                ];
             }
             if(!self::validadePassword($password)) {
-                $hxTrigger[] = "invalidPassword";
+                $body[] = [
+                    "input" => "input-password",
+                    "valid" => "false",
+                    "value" => "reset",
+                    "small" => "password-feedback",
+                    "text" => "Password must be between 6 and 255 characters"
+                ];
             }
-            self::respond($hxTrigger);
+            self::respond(400, $body);
             $userId = UserDAO::login($email, $password);
             if($userId > 0) {
                 $_SESSION["userId"] = $userId;
@@ -26,7 +41,18 @@ class UserController {
             }
             else {
                 http_response_code(401);
-                header("HX-Trigger: invalidLoginInfo");
+                $body[] = [
+                    "input" => "input-email",
+                    "valid" => "false"
+                ];
+                $body[] = [
+                    "input" => "input-password",
+                    "valid" => "false",
+                    "value" => "reset",
+                    "small" => "password-feedback",
+                    "text" => "Incorrect email or password"
+                ];
+                self::respond(401, $body);
                 exit();
             }
         }
@@ -48,17 +74,47 @@ class UserController {
             $email = $_POST["email"];
             $password = $_POST["password"];
             $repeatPassword = $_POST["password-repeat"];
-            $hxTrigger = [];
+            $body = [];
             if(!self::validadeEmail($email)) {
-                $hxTrigger[] = "invalidEmail";
+                $body[] = [
+                    "input" => "input-email",
+                    "valid" => "false",
+                    "small" => "email-feedback",
+                    "text" => "Email must be between 6 and 255 characters"
+                ];
+                $body[] = [
+                    "input" => "input-password",
+                    "value" => "reset"
+                ];
+                $body[] = [
+                    "input" => "input-password-repeat",
+                    "value" => "reset"
+                ];
             }
             if(!self::validadePassword($password)) {
-                $hxTrigger[] = "invalidPassword";
+                $body[] = [
+                    "input" => "input-password",
+                    "valid" => "false",
+                    "value" => "reset",
+                    "small" => "password-feedback",
+                    "text" => "Password must be between 6 and 255 characters"
+                ];
             }
             if(!self::validadePassword($repeatPassword) || $password !== $repeatPassword) {
-                $hxTrigger[] = "passwordsDidntMatch";
+                $body[] = [
+                    "input" => "input-password",
+                    "valid" => "false",
+                    "value" => "reset"
+                ];
+                $body[] = [
+                    "input" => "input-password-repeat",
+                    "valid" => "false",
+                    "value" => "reset",
+                    "small" => "password-repeat-feedback",
+                    "text" => "Passwords didn't match"
+                ];
             }
-            self::respond($hxTrigger);
+            self::respond(400, $body);
             $passwordHash = password_hash($password, PASSWORD_ARGON2ID);
             $userId = UserDAO::signup($email, $passwordHash);
             if($userId > 0) {
@@ -95,17 +151,45 @@ class UserController {
             $newEmail = $_POST["new-email"];
             $newEmailRepeat = $_POST["new-email-repeat"];
             $password = $_POST["password"];
-            $hxTrigger = [];
+            $body = [];
             if(!self::validadeEmail($newEmail)) {
-                $hxTrigger[] = "invalidEmail";
+                $body[] = [
+                    "input" => "input-new-email",
+                    "valid" => "false",
+                    "small" => "new-email-feedback",
+                    "text" => "New Email must be between 6 and 255 characters"
+                ];
+                $body[] = [
+                    "input" => "input-password",
+                    "value" => "reset"
+                ];
             }
             if(!self::validadeEmail($newEmailRepeat) || $newEmail !== $newEmailRepeat) {
-                $hxTrigger[] = "emailsDontMatch";
+                $body[] = [
+                    "input" => "input-new-email",
+                    "valid" => "false"
+                ];
+                $body[] = [
+                    "input" => "input-new-email-repeat",
+                    "valid" => "false",
+                    "small" => "new-email-repeat-feedback",
+                    "text" => "Emails don't match"
+                ];
+                $body[] = [
+                    "input" => "input-password",
+                    "value" => "reset"
+                ];
             }
             if(!self::validadePassword($password)) {
-                $hxTrigger[] = "invalidPassword";
+                $body[] = [
+                    "input" => "input-password",
+                    "valid" => "false",
+                    "value" => "reset",
+                    "small" => "password-feedback",
+                    "text" => "Confirm current password"
+                ];
             }
-            self::respond($hxTrigger);
+            self::respond(400, $body);
             if($newEmail !== UserDAO::getEmail($userId)) {
                 if(UserDAO::validatePassword($userId, $password)) {
                     if(UserDAO::changeEmail($userId, $newEmail)) {
@@ -117,15 +201,32 @@ class UserController {
                     }
                 }
                 else {
-                    http_response_code(401);
-                    header("HX-Trigger: wrongPassword");
-                    exit();
+                    $body[] = [
+                        "input" => "input-password",
+                        "valid" => "false",
+                        "value" => "reset",
+                        "small" => "password-feedback",
+                        "text" => "Confirm current password"
+                    ];
+                    self::respond(401, $body);
                 }
             }
             else {
-                http_response_code(400);
-                header("HX-Trigger: emailMustBeDifferent");
-                exit();
+                $body[] = [
+                    "input" => "input-new-email",
+                    "valid" => "false",
+                    "small" => "new-email-feedback",
+                    "text" => "New email must be different"
+                ];
+                $body[] = [
+                    "input" => "input-new-email-repeat",
+                    "valid" => "false"
+                ];
+                $body[] = [
+                    "input" => "input-password",
+                    "value" => "reset"
+                ];
+                self::respond(400, $body);
             }
         }
         else {
@@ -140,37 +241,75 @@ class UserController {
             $newPassword = $_POST["new-password"];
             $newPasswordRepeat = $_POST["new-password-repeat"];
             $currentPassword = $_POST["password"];
-            $hxTrigger = [];
+            $body = [];
             if(!self::validadePassword($newPassword)) {
-                $hxTrigger[] = "invalidNewPassword";
+                $body[] = [
+                    "input" => "input-new-password",
+                    "valid" => "false",
+                    "value" => "reset",
+                    "small" => "new-password-feedback",
+                    "text" => "New password must be between 6 and 255 characters"
+                ];
             }
             if(!self::validadePassword($newPasswordRepeat) || $newPassword !== $newPasswordRepeat) {
-                $hxTrigger[] = "newPasswordsDidntMatch";
+                $body[] = [
+                    "input" => "input-new-password",
+                    "valid" => "false",
+                    "value" => "reset"
+                ];
+                $body[] = [
+                    "input" => "input-new-password-repeat",
+                    "valid" => "false",
+                    "value" => "reset",
+                    "small" => "new-password-repeat-feedback",
+                    "text" => "New passwords didn't match"
+                ];
             }
             if(!self::validadePassword($currentPassword)) {
-                $hxTrigger[] = "invalidPassword";
+                $body[] = [
+                    "input" => "input-new-password",
+                    "value" => "reset"
+                ];
+                $body[] = [
+                    "input" => "input-new-password-repeat",
+                    "value" => "reset"
+                ];
+                $body[] = [
+                    "input" => "input-password",
+                    "valid" => "false",
+                    "value" => "reset",
+                    "small" => "password-feedback",
+                    "text" => "Confirm current password"
+                ];
             }
-            self::respond($hxTrigger);
-            if($newPassword === $newPasswordRepeat) {
-                if(UserDAO::validatePassword($userId, $currentPassword)) {
-                    $passwordHash = password_hash($newPassword, PASSWORD_ARGON2ID);
-                    if(UserDAO::changePassword($userId, $passwordHash)) {
-                        self::logout();
-                    }
-                    else {
-                        http_response_code(500);
-                        exit();
-                    }
+            self::respond(400, $body);
+            if(UserDAO::validatePassword($userId, $currentPassword)) {
+                $passwordHash = password_hash($newPassword, PASSWORD_ARGON2ID);
+                if(UserDAO::changePassword($userId, $passwordHash)) {
+                    self::logout();
                 }
                 else {
-                    http_response_code(401);
-                    header("HX-Trigger: wrongPassword");
+                    http_response_code(500);
                     exit();
                 }
             }
             else {
-                http_response_code(400);
-                echo "Passwords don't match";
+                $body[] = [
+                    "input" => "input-new-password",
+                    "value" => "reset"
+                ];
+                $body[] = [
+                    "input" => "input-new-password-repeat",
+                    "value" => "reset"
+                ];
+                $body[] = [
+                    "input" => "input-password",
+                    "valid" => "false",
+                    "value" => "reset",
+                    "small" => "password-feedback",
+                    "text" => "Confirm current password"
+                ];
+                self::respond(401, $body);
                 exit();
             }
         }
@@ -184,7 +323,17 @@ class UserController {
         if($_SESSION["userId"] > 0 && isset($_POST["password"])) {
             $userId = $_SESSION["userId"];
             $password = $_POST["password"];
-            self::validadePassword($password);
+            $body = [];
+            if(!self::validadePassword($password)) {
+                $body[] = [
+                    "input" => "input-password",
+                    "valid" => "false",
+                    "value" => "reset",
+                    "small" => "password-feedback",
+                    "text" => "Confirm current password"
+                ];
+            }
+            self::respond(400, $body);
             if(UserDAO::validatePassword($userId, $password)) {
                 if(UserDAO::delete($userId)) {
                     self::logout();
@@ -195,9 +344,14 @@ class UserController {
                 }
             }
             else {
-                http_response_code(401);
-                echo "Invalid password";
-                exit();
+                $body[] = [
+                    "input" => "input-password",
+                    "valid" => "false",
+                    "value" => "reset",
+                    "small" => "password-feedback",
+                    "text" => "Confirm current password"
+                ];
+                self::respond(401, $body);
             }
         }
         else {
@@ -224,14 +378,11 @@ class UserController {
         }
     }
 
-    private static function respond(array $hxTrigger): void {
-        if(count($hxTrigger) > 0) {
-            http_response_code(400);
-            $header = "HX-Trigger: " . $hxTrigger[0];
-            for($i = 1; $i < count($hxTrigger); $i++) {
-                $header .= ", " . $hxTrigger[$i];
-            }
-            header($header);
+    private static function respond(int $code, array $body): void {
+        if(count($body) > 0) {
+            http_response_code($code);
+            header("Content-type: application/json");
+            echo json_encode($body);
             exit();
         }
     }
