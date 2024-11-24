@@ -8,7 +8,7 @@ use \PDOException;
 
 class ItemDAO {
 
-    public static function create(int $userId, string $name, int $quantity, string $location, string $description): bool {
+    public static function add(int $userId, string $name, int $quantity, string $location, string $description): bool {
         try {
             $conn = ConnectionFactory::createConnection();
             $stmt = $conn->prepare("INSERT INTO item (userId, name, quantity, location, description) VALUES (:userId, :name, :quantity, :location, :description);");

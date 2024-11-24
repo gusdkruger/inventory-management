@@ -1,4 +1,4 @@
-<form class="mx-auto" style="width: 90%; max-width: 400px;" hx-post="/changeEmail">
+<form class="mx-auto my-5" style="width: 90%; max-width: 400px;" hx-post="/changeEmail">
     <h2 class="fs-4 mb-3">Change Email</h2>
     <div class="form-floating mb-2">
         <input class="form-control" id="input-new-email" placeholder="" name="new-email" type="email">
@@ -16,4 +16,5 @@
         <small class="form-text text-danger ms-2" id="password-feedback"></small>
     </div>
     <button class="btn btn-primary mb-2 py-2 w-100" type="submit">Change Email</button>
+    <a class="d-block mx-auto p-2 link-underline link-offset-3 link-underline-opacity-0 link-underline-opacity-100-hover" style="width: fit-content; cursor: pointer;" hx-post="/templateTable" hx-target="main">Go back</a>
 </form>

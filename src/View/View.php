@@ -19,6 +19,7 @@ class View {
     private const HTML_HEADER = __DIR__ . "/../templates/afterLogin/header.html";
     private const HTML_AFTER_LOGIN_START = __DIR__ . "/../templates/afterLogin/mainStart.html";
     private const HTML_AFTER_LOGIN_END = __DIR__ . "/../templates/afterLogin/mainEnd.html";
+    private const HTML_TABLE = __DIR__ . "/../templates/afterLogin/table.html";
 
     /* After Login User Related */
     private const HTML_CHANGE_EMAIL = __DIR__ . "/../templates/afterLogin/userRelated/changeEmail.html";
@@ -26,19 +27,15 @@ class View {
     private const HTML_DELETE_PROFILE = __DIR__ . "/../templates/afterLogin/userRelated/deleteProfile.html";
 
     /* After Login Item Related */
-    /*
-    private const HTML_ADD_ITEM = __DIR__ . "/../templates/addItem.html";
-    private const HTML_NO_ITEMS = __DIR__ . "/../templates/noItems.html";
-    private const HTML_TABLE_HEADER = __DIR__ . "/../templates/tableHeader.html";
-    private const PHP_ITEM = __DIR__ . "/../templates/item.php";
-    private const PHP_EDIT_ITEM = __DIR__ . "/../templates/editItem.php";
-    */
+    private const HTML_ADD_ITEM = __DIR__ . "/../templates/afterLogin/itemRelated/addItem.html";
+    //private const PHP_EDIT_ITEM = __DIR__ . "/../templates/editItem.php";
 
     public static function load(): void {
         $body = file_get_contents(self::HTML_START);
         if($_SESSION["userId"] > 0) {
             $body .= file_get_contents(self::HTML_HEADER);
             $body .= file_get_contents(self::HTML_AFTER_LOGIN_START);
+            $body .= file_get_contents(self::HTML_TABLE);
             $body .= file_get_contents(self::HTML_AFTER_LOGIN_END);
         }
         else {
@@ -51,24 +48,6 @@ class View {
         exit();
     }
 
-    /*
-    public static function loadList(array $items): void {
-        $body = file_get_contents(self::HTML_TABLE_HEADER);
-        if(count($items) === 0) {
-            $body .= file_get_contents(self::HTML_NO_ITEMS);
-        }
-        else {
-            foreach($items as $item) {
-                ob_start();
-                require self::PHP_ITEM;
-                $body .= ob_get_clean();
-            }
-        }
-        echo $body;
-        exit();
-    }
-    */
-
     public static function templateLogin(): void {
         echo file_get_contents(self::HTML_LOGIN);
         exit();
@@ -80,22 +59,50 @@ class View {
     }
 
     public static function templateChangeEmail(): void {
-        echo file_get_contents(self::HTML_CHANGE_EMAIL);
+        if($_SESSION["userId"] > 0) {
+            echo file_get_contents(self::HTML_CHANGE_EMAIL);
+        }
+        else {
+            http_response_code(401);
+            header("HX-Redirect: /");
+        }
         exit();
     }
 
     public static function templateChangePassword(): void {
-        echo file_get_contents(self::HTML_CHANGE_PASSWORD);
+        if($_SESSION["userId"] > 0) {
+            echo file_get_contents(self::HTML_CHANGE_PASSWORD);
+        }
+        else {
+            http_response_code(401);
+            header("HX-Redirect: /");
+        }
         exit();
     }
 
     public static function templateDeleteProfile(): void {
-        echo file_get_contents(self::HTML_DELETE_PROFILE);
+        if($_SESSION["userId"] > 0) {
+            echo file_get_contents(self::HTML_DELETE_PROFILE);
+        }
+        else {
+            http_response_code(401);
+            header("HX-Redirect: /");
+        }
         exit();
     }
 
-    /*
-    public static function getTemplateAddItem(): void {
+    public static function templateTable(): void {
+        if($_SESSION["userId"] > 0) {
+            echo file_get_contents(self::HTML_TABLE);
+        }
+        else {
+            http_response_code(401);
+            header("HX-Redirect: /");
+        }
+        exit();
+    }
+
+    public static function templateAddItem(): void {
         if($_SESSION["userId"] > 0) {
             echo file_get_contents(self::HTML_ADD_ITEM);
         }
@@ -106,6 +113,7 @@ class View {
         exit();
     }
 
+    /*
     public static function getTemplateEditItem(): void {
         if($_SESSION["userId"] > 0 && isset($_POST["id"])) {
             $item = ItemDAO::readOne($_POST["id"]);
