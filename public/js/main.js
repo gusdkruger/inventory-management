@@ -40,11 +40,11 @@ document.body.addEventListener("htmx:afterRequest", (event) => {
             content += `
             <tr>
                 <th scope="row">${item.id}</th>
-                <td>${item.name}</td>
+                <td class="text-break">${item.name}</td>
                 <td>${item.quantity}</td>
-                <td>${item.location}</td>
-                <td>${item.description}</td>
-                <td>EDIT</td>
+                <td class="text-break">${item.location}</td>
+                <td class="text-break">${item.description}</td>
+                <td><button class="btn btn-outline-primary">Edit</button></td>
                 <td><button class="btn btn-outline-danger" hx-post="/deleteItem" hx-vals='{"id": "${item.id}"}'>Delete</button></td>
             </tr>`;
         });
