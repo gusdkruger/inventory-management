@@ -19,8 +19,6 @@ return [
     "POST|/templateAddItem" => [\InventoryManagement\View\View::class, "templateAddItem"],
     "POST|/addItem" => [\InventoryManagement\Controller\ItemController::class, "add"],
     "POST|/deleteItem" => [\InventoryManagement\Controller\ItemController::class, "delete"],
-    /*
-    "POST|/templateEditItem" => [\InventoryManagement\View\View::class, "getTemplateEditItem"],
+    "POST|/templateEditItem" => [\InventoryManagement\View\View::class, "templateEditItem"],
     "POST|/editItem" => [\InventoryManagement\Controller\ItemController::class, "update"]
-    */
 ];

@@ -3,7 +3,6 @@
 namespace InventoryManagement\Controller;
 
 use InventoryManagement\DAO\ItemDAO;
-use InventoryManagement\View\View;
 
 class ItemController {
 
@@ -78,25 +77,67 @@ class ItemController {
         }
     }
 
-    /*
+    public static function readOne(): array {
+        $itemId = $_POST["id"];
+        if(isset($_POST["id"]) && is_numeric($itemId) && $itemId > 0) {
+            return ItemDAO::readOne($itemId);
+        }
+        else {
+            http_response_code(400);
+            exit();
+        }
+    }
+
     public static function update(): void {
         if($_SESSION["userId"] > 0 && isset($_POST["id"]) && isset($_POST["name"]) && isset($_POST["quantity"])) {
             $userId = $_SESSION["userId"];
             $id = (int)$_POST["id"];
             $name = $_POST["name"];
-            $quantity = (int)$_POST["quantity"];
+            $quantity = $_POST["quantity"] ?? 0;
             $location = $_POST["location"] ?? "null";
             $description = $_POST["description"] ?? "null";
-            self::validadeName($name);
-            self::validadeLocation($location);
-            self::validadeDescription($description);
+            $body = [];
+            if(!self::validadeStringObligatory($name)) {
+                $body[] = [
+                    "input" => "input-name",
+                    "valid" => "false",
+                    "small" => "name-feedback",
+                    "text" => "Name must be between 1 and 255 characters"
+                ];
+            }
+            if(!self::validadeQuantity($quantity)) {
+                $body[] = [
+                    "input" => "input-quantity",
+                    "valid" => "false",
+                    "small" => "quantity-feedback",
+                    "text" => "Quantity must be a number between 0 and 999.999.999"
+                ];
+            }
+            if(!self::validadeStringOptional($location)) {
+                $body[] = [
+                    "input" => "input-location",
+                    "valid" => "false",
+                    "small" => "location-feedback",
+                    "text" => "Location must be less than 256 characters"
+                ];
+            }
+            if(!self::validadeStringOptional($description)) {
+                $body[] = [
+                    "input" => "input-description",
+                    "valid" => "false",
+                    "small" => "description-feedback",
+                    "text" => "Description must be less than 256 characters"
+                ];
+            }
+            self::respond(400, $body);
             if(ItemDAO::update($userId, $id, $name, $quantity, $location, $description)) {
-                echo "Item updated successfully";
+                http_response_code(200);
+                header("HX-Retarget: #toast");
+                header("HX-Reswap: none");
                 exit();
             }
             else {
                 http_response_code(500);
-                echo "Failed to updated item";
                 exit();
             }
         }
@@ -105,7 +146,6 @@ class ItemController {
             exit();
         }
     }
-    */
 
     public static function delete(): void {
         if($_SESSION["userId"] > 0 && isset($_POST["id"])) {
@@ -123,32 +163,6 @@ class ItemController {
             exit();
         }
     }
-
-    /*
-    private static function validadeName(string $name): void {
-        if(strlen($name) > 255) {
-            http_response_code(400);
-            echo "Name must be less than 255 characters";
-            exit();
-        }
-    }
-
-    private static function validadeLocation(string $location): void {
-        if(strlen($location) > 255) {
-            http_response_code(400);
-            echo "Location must be less than 256 characters";
-            exit();
-        }
-    }
-
-    private static function validadeDescription(string $description): void {
-        if(strlen($description) > 255) {
-            http_response_code(400);
-            echo "Description must be less than 256 characters";
-            exit();
-        }
-    }
-    */
 
     private static function validadeStringObligatory(string $string): bool {
         if(!$string || strlen($string) > 255) {

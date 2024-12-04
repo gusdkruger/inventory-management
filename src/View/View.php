@@ -2,7 +2,7 @@
 
 namespace InventoryManagement\View;
 
-use InventoryManagement\DAO\ItemDAO;
+use InventoryManagement\Controller\ItemController;
 
 class View {
     /* Common */
@@ -28,7 +28,7 @@ class View {
 
     /* After Login Item Related */
     private const HTML_ADD_ITEM = __DIR__ . "/../templates/afterLogin/itemRelated/addItem.html";
-    //private const PHP_EDIT_ITEM = __DIR__ . "/../templates/editItem.php";
+    private const PHP_EDIT_ITEM = __DIR__ . "/../templates/afterLogin/itemRelated/editItem.php";
 
     public static function load(): void {
         $body = file_get_contents(self::HTML_START);
@@ -113,12 +113,11 @@ class View {
         exit();
     }
 
-    /*
-    public static function getTemplateEditItem(): void {
-        if($_SESSION["userId"] > 0 && isset($_POST["id"])) {
-            $item = ItemDAO::readOne($_POST["id"]);
+    public static function templateEditItem(): void {
+        if($_SESSION["userId"] > 0) {
+            $item = ItemController::readOne();
             ob_start();
-            require self::PHP_EDIT_ITEM;
+            require_once self::PHP_EDIT_ITEM;
             echo ob_get_clean();
         }
         else {
@@ -127,5 +126,4 @@ class View {
         }
         exit();
     }
-    */
 }

@@ -44,7 +44,7 @@ document.body.addEventListener("htmx:afterRequest", (event) => {
                 <td>${item.quantity}</td>
                 <td class="text-break">${item.location}</td>
                 <td class="text-break">${item.description}</td>
-                <td><button class="btn btn-outline-primary">Edit</button></td>
+                <td><button class="btn btn-outline-primary" hx-post="/templateEditItem" hx-vals='{"id": "${item.id}"}' hx-target="main">Edit</button></td>
                 <td><button class="btn btn-outline-danger" hx-post="/deleteItem" hx-vals='{"id": "${item.id}"}'>Delete</button></td>
             </tr>`;
         });
@@ -56,7 +56,7 @@ document.body.addEventListener("htmx:afterRequest", (event) => {
         const tr = event.detail.target.parentElement.parentElement;
         tr.remove();
     }
-    else if(event.detail.requestConfig.path == "/addItem" && event.detail.xhr.status == 200) {
+    else if(event.detail.requestConfig.path == "/addItem" || event.detail.requestConfig.path == "/editItem" && event.detail.xhr.status == 200) {
         const toastBootstrap = bootstrap.Toast.getOrCreateInstance(event.detail.target)
         toastBootstrap.show();
     }
